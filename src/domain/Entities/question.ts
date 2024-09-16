@@ -1,8 +1,8 @@
-import { UniqueEntityId } from './../../core/entities/unique-entity-id';
-import { Slug } from "./value-objects/slug"
-import { Entity } from "../../core/entities/estity"
-import { Optional } from '../../core/types/optional';
-import dayjs from 'dayjs';
+import { UniqueEntityId } from '@/core/entities/unique-entity-id'
+import { Slug } from '@/domain/Entities/value-objects/slug'
+import { Entity } from '@/core/entities/estity'
+import { Optional } from '../../core/types/optional'
+import dayjs from 'dayjs'
 
 interface QuestionProps {
   authorId: UniqueEntityId
@@ -14,10 +14,7 @@ interface QuestionProps {
   updatedAt?: Date
 }
 
-
-
 export class Question extends Entity<QuestionProps> {
-
   get authorId() {
     return this.props.authorId
   }
@@ -51,43 +48,41 @@ export class Question extends Entity<QuestionProps> {
   }
 
   get execerpt() {
-    return this.content
-      .substring(0, 120)
-      .trimEnd()
-      .concat('...')
+    return this.content.substring(0, 120).trimEnd().concat('...')
   }
 
   private touch() {
     this.props.updatedAt = new Date()
   }
 
-  set title(title: string){
+  set title(title: string) {
     this.props.title = title
     this.props.slug = Slug.createFromText(title)
     this.touch()
   }
 
-  set content(content: string){
+  set content(content: string) {
     this.props.content = content
     this.touch()
   }
 
-  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined){
+  set bestAnswerId(bestAnswerId: UniqueEntityId | undefined) {
     this.props.bestAnswerId = bestAnswerId
     this.touch()
   }
 
-
-
   static create(
-    props: Optional<QuestionProps, 'createdAt'|'slug'>,
-    id?: UniqueEntityId
+    props: Optional<QuestionProps, 'createdAt' | 'slug'>,
+    id?: UniqueEntityId,
   ) {
-    const question = new Question({
-      ...props,
-      slug: props.slug ?? Slug.createFromText(props.title),
-      createdAt: new Date(),
-    }, id)
+    const question = new Question(
+      {
+        ...props,
+        slug: props.slug ?? Slug.createFromText(props.title),
+        createdAt: new Date(),
+      },
+      id,
+    )
 
     return question
   }
